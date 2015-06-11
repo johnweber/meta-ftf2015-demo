@@ -1,0 +1,38 @@
+#!/bin/sh
+DAEMON=/usr/bin/glive-server
+NAME=gliveserver
+DESC="GLIVE Server Daemon"
+ARGS="-r -d"
+GSTREAMER_LAUNCH="-l 'imxv4l2src capture-mode=0 ! vpuenc codec=6 bitrate=1000000 ! rtph264pay name=pay0 pt=96'"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+    start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon -S -b -x $DAEMON -- $ARGS $GSTREAMER_LAUNCH
+	echo "$NAME."
+	;;
+    stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon -K -x $DAEMON
+	echo "$NAME."
+	;;
+    restart)
+	$0 stop
+	$0 start
+	;;
+    reload)
+	echo -n "Reloading $DESC: "
+	killall -HUP $(basename ${DAEMON})
+	echo "$NAME."
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart|reload}"
+	exit 1
+	;;
+esac
+
+exit 0

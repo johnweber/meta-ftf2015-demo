@@ -1,0 +1,29 @@
+From 1183f9c285c2a64b89f9eb28bcfc9213799aa786 Mon Sep 17 00:00:00 2001
+From: John Weber <rjohnweber@gmail.com>
+Date: Thu, 11 Jun 2015 16:01:45 -0500
+Subject: [v4l2loopback][PATCH 2/2] Makefile: add modules_install target and
+ remove depmod
+
+Signed-off-by: John Weber <rjohnweber@gmail.com>
+---
+ Makefile | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index be9b842..9b63ffd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -41,9 +41,8 @@ v4l2loopback.ko:
+ 	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules
+ 
+ install-all: install install-utils install-man
+-install:
++modules_install install: all
+ 	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules_install
+-	depmod -a  $(KERNEL_VERSION)
+ 
+ install-utils: utils/v4l2loopback-ctl
+ 	$(INSTALL_DIR) "$(DESTDIR)$(BINDIR)"
+-- 
+2.0.0
+

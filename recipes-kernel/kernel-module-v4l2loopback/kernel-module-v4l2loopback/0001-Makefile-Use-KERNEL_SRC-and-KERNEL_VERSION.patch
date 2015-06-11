@@ -1,0 +1,52 @@
+From d3a06abf5ab223ac19c9d46aa617db39603ad8c2 Mon Sep 17 00:00:00 2001
+From: John Weber <rjohnweber@gmail.com>
+Date: Thu, 11 Jun 2015 15:51:17 -0500
+Subject: [v4l2loopback][PATCH 1/2] Makefile: Use KERNEL_SRC and KERNEL_VERSION
+
+The original Makefile uses KERNEL_DIR and KERNELRELEASE, which are
+not set by module.bbclass.  Change these to use KERNEL_SRC and
+KERNEL_VERSION instead
+
+Signed-off-by: John Weber <rjohnweber@gmail.com>
+---
+ Makefile | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 22bef42..be9b842 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,5 +1,3 @@
+-KERNELRELEASE	?= `uname -r`
+-KERNEL_DIR	?= /lib/modules/$(KERNELRELEASE)/build
+ PWD		:= $(shell pwd)
+ obj-m		:= v4l2loopback.o
+ 
+@@ -40,12 +38,12 @@ all: v4l2loopback.ko
+ v4l2loopback: v4l2loopback.ko
+ v4l2loopback.ko:
+ 	@echo "Building v4l2-loopback driver..."
+-	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules
+ 
+ install-all: install install-utils install-man
+ install:
+-	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules_install
+-	depmod -a  $(KERNELRELEASE)
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) modules_install
++	depmod -a  $(KERNEL_VERSION)
+ 
+ install-utils: utils/v4l2loopback-ctl
+ 	$(INSTALL_DIR) "$(DESTDIR)$(BINDIR)"
+@@ -58,7 +56,7 @@ install-man: man/v4l2loopback-ctl.1
+ clean:
+ 	rm -f *~
+ 	rm -f Module.symvers Module.markers modules.order
+-	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) clean
++	$(MAKE) -C $(KERNEL_SRC) M=$(PWD) clean
+ 
+ distclean: clean
+ 	rm -f man/v4l2loopback-ctl.1
+-- 
+2.0.0
+

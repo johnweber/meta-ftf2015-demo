@@ -1,0 +1,53 @@
+README file for the meta-wandcam-demo layer
+
+This layer turns the Wandboard Dual or Quad into a wireless RTSP streaming
+camera.
+
+Depends on:
+- poky (Daisy or higher)
+- meta-fsl-arm
+- meta-fsl-arm-extra (Daisy or higher, 3.10.17 kernel)
+- meta-wandboard-ap
+- meta-openembedded/meta-multimedia
+
+Instructions:
+- Clone this layer into sources subdirectory
+- Add layer to BBLAYERS in build/conf/bblayers.conf:
+
+Example:
+BBLAYERS = " \
+  ${BSPDIR}/sources/poky/meta \
+  ${BSPDIR}/sources/poky/meta-yocto \
+  \
+  ${BSPDIR}/sources/meta-openembedded/meta-oe \
+  ${BSPDIR}/sources/meta-openembedded/meta-multimedia \ <-- Add this layer
+  \
+  ${BSPDIR}/sources/meta-fsl-arm \
+  ${BSPDIR}/sources/meta-fsl-arm-extra \
+  ${BSPDIR}/sources/meta-fsl-demos \
+  ${BSPDIR}/sources/meta-wandboard-ap \ <-- Add this layer
+  ${BSPDIR}/sources/meta-wandcam-demo \  <-- ADD THIS LINE HERE
+"
+
+- Build a base or test image:
+
+$ bitbake wandcam-ap-demo-image
+
+- Write the image to a microSD card:
+
+$ sudo dd if=tmp/deploy/images/<MACHINE>/wandcam-ap-demo-image-<MACHINE>.sdcard of=/dev/sdX bs-1M
+
+  where MACHINE is the machine you are building for (e.g. wandboard-dual or
+  wandboard-quad) and /dev/sdX is the device corresponding to your microSD
+  card.
+
+- The Wandboard should be visible with an essid of "wandboard".  The default
+  passphrase is "wandboard"
+
+NOTE: if you want to change these, then grep through the recipe files and
+make modifications.
+
+- Open VLC on a device connected to the network, and open an RTSP stream:
+
+  rtsp://10.10.10.1:8554/camera
+
