@@ -2,8 +2,7 @@
 DAEMON=/usr/bin/glive-server
 NAME=gliveserver
 DESC="GLIVE Server Daemon"
-ARGS="-r -d"
-GSTREAMER_LAUNCH="-l 'imxv4l2src capture-mode=0 ! vpuenc codec=6 bitrate=1000000 ! rtph264pay name=pay0 pt=96'"
+ARGS="-f"
 
 test -f $DAEMON || exit 0
 
