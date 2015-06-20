@@ -1,22 +1,26 @@
 #!/bin/sh
 DAEMON=/usr/bin/glive-server
-NAME=gliveserver
-DESC="GLIVE Server Daemon"
-ARGS="-f"
+DAEMON2=/usr/bin/leptcam
+NAME="gliveserver&leptcam"
+DESC="GLIVE Server Daemon and Leptcam"
+ARGS="-d"
 
 test -f $DAEMON || exit 0
+test -f $DAEMON2 || exit 0
 
 set -e
 
 case "$1" in
     start)
 	echo -n "Starting $DESC: "
+	start-stop-daemon -S -b -x $DAEMON2 --
 	start-stop-daemon -S -b -x $DAEMON -- $ARGS $GSTREAMER_LAUNCH
 	echo "$NAME."
 	;;
     stop)
 	echo -n "Stopping $DESC: "
 	start-stop-daemon -K -x $DAEMON
+        start-stop-daemon -K -x $DAEMON2  
 	echo "$NAME."
 	;;
     restart)
